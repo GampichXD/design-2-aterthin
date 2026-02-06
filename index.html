@@ -1,388 +1,183 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ATERTHIN ASV</title>
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Orbitron:wght@700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
-    <link rel="stylesheet" href="css/style.css" />
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATEROLAS ASV</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/style.css">
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  </head>
-  <body>
+</head>
+<body>
+
     <div class="grid-container">
-      <nav class="navbar">
-        <div class="nav-left">
-          <span id="date">--/--/--</span> <span id="time">--:--</span>
-          <span
-            id="location"
-            style="color: #00e0ff; margin-left: 10px; font-weight: bold"
-            >SEMARANG</span
-          >
-          <div class="status-pill">
-            <span id="status-light" class="status-disconnected"></span>
-            <span id="status-text">Disconnected</span>
-          </div>
-        </div>
-
-        <div class="nav-center">
-          <img
-            id="logo-aterolas"
-            src="assets/title-dark.png"
-            alt="ATEROLAS"
-            style="height: 100px"
-          />
-        </div>
-
-        <div class="nav-right">
-          <span style="font-size: 0.8rem; font-weight: bold; margin-right: 10px"
-            >ASV MONITORING</span
-          >
-          <img src="assets/logo-ship.png" alt="Logo" style="height: 35px" />
-          <img
-            src="assets/logo-institute.png"
-            alt="Logo"
-            style="height: 35px; margin-left: 5px"
-          />
-          <button
-            class="theme-toggle"
-            id="theme-toggle"
-            title="Toggles light & dark"
-            aria-label="auto"
-          >
-            <svg
-              class="sun-and-moon"
-              aria-hidden="true"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <mask class="moon" id="moon-mask">
-                <rect x="0" y="0" width="100%" height="100%" fill="white" />
-                <circle cx="24" cy="10" r="6" fill="black" />
-              </mask>
-              <circle
-                class="sun"
-                cx="12"
-                cy="12"
-                r="6"
-                mask="url(#moon-mask)"
-                fill="currentColor"
-              />
-              <g class="sun-beams" stroke="currentColor">
-                <line x1="12" y1="1" x2="12" y2="3" />
-                <line x1="12" y1="21" x2="12" y2="23" />
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                <line x1="1" y1="12" x2="3" y2="12" />
-                <line x1="21" y1="12" x2="23" y2="12" />
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-              </g>
-            </svg>
-          </button>
-          <button
-            class="settings-toggle"
-            id="admin-login-btn"
-            title="Admin Login"
-          >
-            <svg
-              class="gear-icon"
-              aria-hidden="true"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"
-              />
-            </svg>
-          </button>
-        </div>
-      </nav>
-
-      <aside class="col-left card">
-        <div class="card-header">
-          <span>VISION DATA</span>
-          <div class="admin-tools hidden">
-            <button id="btn-edit-cv-count" class="btn small">Edit</button>
-          </div>
-        </div>
-
-        <div class="vision-top-section">
-          <div class="cv-hud-grid">
-            <div class="hud-item">
-              <small>STATUS</small><b id="hud-state">IDLE</b>
-            </div>
-            <div class="hud-item">
-              <small>WAYPOINT</small>
-              <div><b id="hud-wp">0</b> <span id="hud-dist">(0m)</span></div>
-            </div>
-            <div class="hud-item">
-              <small>ACTION</small><b id="hud-nav">WAIT</b>
-            </div>
-            <div class="hud-item">
-              <small>GAIN</small><b id="hud-gain">0.0</b>
-            </div>
-          </div>
-
-          <div class="gallery-label">FOTO BOX</div>
-          <div id="gallery-green" class="gallery-grid">
-            <div class="gallery-placeholder"></div>
-            <div class="gallery-placeholder"></div>
-          </div>
-
-          <div class="gallery-label" style="color: #00ffff; margin-top: 2px">
-            BAWAH AIR
-          </div>
-          <div id="gallery-blue" class="gallery-grid">
-            <div class="gallery-placeholder"></div>
-            <div class="gallery-placeholder"></div>
-          </div>
-
-          <div class="counters-row">
-            <div class="cnt-box"><span>TRACK</span><b id="track-num">0</b></div>
-            <div class="cnt-box" style="color: #ff4444">
-              <span>RED</span><b id="buoy-red">0</b>
-            </div>
-            <div class="cnt-box" style="color: #00ff00">
-              <span>GREEN</span><b id="buoy-green">0</b>
-            </div>
-          </div>
-        </div>
-
-        <div class="video-section" data-card="cv">
-          <img
-            id="video-feed"
-            src="assets/placeholder-video.jpg"
-            alt="No Signal"
-          />
-          <div class="overlay-text" id="mission-mode-label">WAITING</div>
-          <button
-            class="expand-btn"
-            title="Fullscreen"
-            style="position: absolute; top: 5px; right: 5px; z-index: 10"
-          >
-            ⤢
-          </button>
-        </div>
-      </aside>
-
-      <main class="col-center">
-        <div class="card ship-info-card" data-card="info">
-          <div class="card-header">
-            <span>TENTANG KAPAL</span>
-            <div class="card-actions">
-              <button class="expand-btn">⤢</button>
-              <div class="admin-tools hidden">
-                <button id="btn-add-info" class="btn small">＋</button>
-                <button id="btn-edit-info" class="btn small">✏️</button>
-              </div>
-            </div>
-          </div>
-          <div class="ship-content-wrapper">
-            <div class="model-3d-container">
-              <img src="assets/model-kapal-removebg-preview.png" alt="Kapal" />
-            </div>
-            <div class="ship-info" id="ship-info">
-              <h3>Sejarah & Inspirasi</h3>
-              <p>
-                ATEROLAS adalah generasi keempat ASV yang dikembangkan dengan
-                inspirasi dari keuletan Para Staffnya...<br />
-                <strong>HIDUP ATERKIA!</strong>
-              </p>
-              <h3>Kegunaan Kapal</h3>
-              <p>
-                Didesain untuk misi pengangkutan penumpang dan barang-barang
-                tidak besar. Karena yang Maha Besar cuma Allah SWT.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="card trajectory-card" data-card="traj">
-          <div class="card-header">
-            <span>TRAJECTORY & PEMETAAN</span>
-            <div class="card-actions">
-              <div class="track-btn-group">
-                <button id="btn-track-a" class="btn-circle active">A</button>
-                <button id="btn-track-b" class="btn-circle">B</button>
-              </div>
-              <span
-                id="coordinate-value"
-                style="
-                  font-size: 0.8rem;
-                  font-family: monospace;
-                  color: #00e0ff;
-                  margin: 0 10px;
-                "
-                >S 0.00, E 0.00</span
-              >
-              <button class="expand-btn">⤢</button>
-            </div>
-          </div>
-
-          <div class="maps-wrapper">
-            <div id="gmaps-container" class="map-box">
-              <div class="compass-indicator">
-                <div class="arrow-north"></div>
-                <span class="compass-n">N</span>
-              </div>
-            </div>
-            <div
-              id="arena-container"
-              class="map-box"
-              style="background: white !important"
-            >
-              <canvas id="arena-canvas"></canvas>
-              <div class="compass-indicator">
-                <div class="arrow-north"></div>
-                <span class="compass-n">N</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      <aside class="col-right card">
-        <div class="card-header">
-          <span>MONITORING</span>
-          <button class="expand-btn">⤢</button>
-        </div>
-
-        <div class="card-content-stack">
-          <div class="sensor-section" data-card="monitor">
-            <div class="sensor-grid">
-              <div class="sensor-item" data-sensor="roll">
-                <span class="label">Roll</span>
-                <div class="gauge-circle">
-                  <span class="range-min">0</span
-                  ><span class="range-max">360</span>
-                  <div class="needle" id="needle-roll"></div>
-                  <span class="val-text" id="roll-value">0°</span>
+        
+        <nav class="navbar">
+            <div class="nav-left">
+                <span id="date">--/--/--</span> <span id="time">--:--</span>
+                <span id="location" style="color:#00e0ff; margin-left:10px; font-weight:bold;">SEMARANG</span>
+                <div class="status-pill">
+                    <span id="status-light" class="status-disconnected"></span>
+                    <span id="status-text">Disconnected</span>
                 </div>
-              </div>
-
-              <div class="sensor-item" data-sensor="pitch">
-                <span class="label">Pitch</span>
-                <div class="gauge-circle">
-                  <span class="range-min">0</span
-                  ><span class="range-max">360</span>
-                  <div class="needle" id="needle-pitch"></div>
-                  <span class="val-text" id="pitch-value">0°</span>
-                </div>
-              </div>
-
-              <div class="sensor-item" data-sensor="yaw">
-                <span class="label">Yaw</span>
-                <div class="gauge-circle">
-                  <span class="range-min">0</span
-                  ><span class="range-max">360</span>
-                  <div class="needle" id="needle-yaw"></div>
-                  <span class="val-text" id="yaw-value">0°</span>
-                </div>
-              </div>
-
-              <div class="sensor-item active" data-sensor="speed">
-                <span class="label">SOG</span>
-                <div class="gauge-semi">
-                  <span class="semi-label-left">0</span>
-                  <span class="semi-label-mid">40</span>
-                  <span class="semi-label-right">80</span>
-                  <div class="needle" id="needle-speed"></div>
-                </div>
-                <span class="val-text" id="speed-value">0</span>
-              </div>
-
-              <div class="sensor-item" data-sensor="nuc_signal">
-                <span class="label">COG</span>
-                <div class="gauge-circle">
-                  <span class="range-cardinal top">N</span>
-                  <span class="range-cardinal right">E</span>
-                  <span class="range-cardinal bottom">S</span>
-                  <span class="range-cardinal left">W</span>
-                  <div class="needle" id="needle-cog"></div>
-                  <span class="val-text" id="signal-value">0°</span>
-                </div>
-              </div>
-
-              <div class="sensor-item" data-sensor="heading">
-                <span class="label">Heading</span>
-                <div class="gauge-circle">
-                  <span class="range-cardinal top">N</span>
-                  <span class="range-cardinal right">E</span>
-                  <span class="range-cardinal bottom">S</span>
-                  <span class="range-cardinal left">W</span>
-                  <div class="needle" id="needle-heading"></div>
-                  <span class="val-text" id="heading-value">0°</span>
-                </div>
-              </div>
-
-              <div class="sensor-item" data-sensor="voltage">
-                <span class="label">Volt</span>
-                <div class="battery-container">
-                  <div class="battery-cap"></div>
-                  <div class="battery-body">
-                    <div class="battery-fill" id="battery-fill"></div>
-                  </div>
-                </div>
-                <span class="val-text" id="voltage-value">0V</span>
-              </div>
-
-              <div class="sensor-item" data-sensor="wifi">
-                <span class="label">Sig</span>
-                <div class="wifi-container">
-                  <div class="wifi-bar b1"></div>
-                  <div class="wifi-bar b2"></div>
-                  <div class="wifi-bar b3"></div>
-                </div>
-                <span class="val-text" id="wifi-value">0ms</span>
-              </div>
             </div>
-          </div>
+            
+            <div class="nav-center">
+                <img id="logo-aterolas" src="assets/title-dark.png" alt="ATEROLAS" style="height: 100px;">
+            </div>
+            
+            <div class="nav-right">
+                <span style="font-size:0.8rem; font-weight:bold; margin-right:10px;">ASV MONITORING</span>
+                <img src="assets/logo-ship.png" alt="Logo" style="height: 35px;">
+                <img src="assets/logo-institute.png" alt="Logo" style="height: 35px; margin-left:5px;">
+                
+                <button class="theme-toggle" id="theme-toggle" title="Switch Theme">
+                    <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+                        <mask class="moon" id="moon-mask"><rect x="0" y="0" width="100%" height="100%" fill="white" /><circle cx="24" cy="10" r="6" fill="black" /></mask>
+                        <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor" />
+                        <g class="sun-beams" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></g>
+                    </svg>
+                </button>
 
-          <div class="chart-section">
-            <canvas id="sensorChart"></canvas>
-          </div>
-        </div>
-      </aside>
+                <button class="settings-toggle" id="admin-login-btn" title="Admin Login">
+                    <svg class="gear-icon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+
+        <aside class="col-left card">
+            <div class="card-header">
+                <span>VISION DATA</span>
+            </div>
+
+            <div class="vision-top-section">
+                <div class="cv-hud-grid">
+                    <div class="hud-item"><small>STATUS</small><b id="hud-state">IDLE</b></div>
+                    <div class="hud-item"><small>WAYPOINT</small><div><b id="hud-wp">0</b> <span id="hud-dist">(0m)</span></div></div>
+                    <div class="hud-item"><small>ACTION</small><b id="hud-nav">WAIT</b></div>
+                    <div class="hud-item"><small>GAIN</small><b id="hud-gain">0.0</b></div>
+                </div>
+
+                <div class="gallery-label">FOTO BOX</div>
+                <div id="gallery-green" class="gallery-grid">
+                    <div class="gallery-placeholder"></div><div class="gallery-placeholder"></div>
+                </div>
+
+                <div class="gallery-label" style="color:#00ffff; margin-top:2px;">BAWAH AIR</div>
+                <div id="gallery-blue" class="gallery-grid">
+                    <div class="gallery-placeholder"></div><div class="gallery-placeholder"></div>
+                </div>
+
+                <div class="counters-row">
+                    <div class="cnt-box"><span>TRACK</span><b id="track-num">0</b></div>
+                    <div class="cnt-box" style="color:#ff4444"><span>RED</span><b id="buoy-red">0</b></div>
+                    <div class="cnt-box" style="color:#00ff00"><span>GREEN</span><b id="buoy-green">0</b></div>
+                </div>
+            </div>
+
+            <div class="video-section" data-card="cv">
+                <img id="video-feed" src="assets/placeholder-video.jpg" alt="No Signal">
+                <div class="overlay-text" id="mission-mode-label">WAITING</div>
+                <button class="expand-btn" title="Fullscreen" style="position:absolute; top:5px; right:5px; z-index:10; color:white;">⤢</button>
+            </div>
+        </aside>
+
+        <main class="col-center">
+            <div class="card ship-info-card" data-card="info">
+                <div class="card-header">
+                    <span>TENTANG KAPAL</span>
+                    <div class="card-actions">
+                        <button class="expand-btn">⤢</button>
+                    </div>
+                </div>
+                <div class="ship-content-wrapper">
+                    <div class="model-3d-container">
+                        <img src="assets/model-kapal-removebg-preview.png" alt="Kapal">
+                    </div>
+                    <div class="ship-info" id="ship-info">
+                        <h3>Sejarah & Inspirasi</h3>
+                        <p>ATEROLAS adalah generasi ASV terbaru yang dikembangkan dengan inspirasi dari keuletan Para Staffnya...<br><strong>HIDUP ATERKIA!</strong></p>
+                        <h3>Kegunaan Kapal</h3>
+                        <p>Didesain untuk misi pengangkutan penumpang dan barang-barang di perairan.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card trajectory-card" data-card="traj">
+                <div class="card-header">
+                    <span>TRAJECTORY & PEMETAAN</span>
+                    <div class="card-actions">
+                        <div class="track-btn-group">
+                            <button id="btn-track-a" class="btn-circle active">A</button>
+                            <button id="btn-track-b" class="btn-circle">B</button>
+                        </div>
+                        <span id="coordinate-value" style="font-size:0.8rem; font-family:monospace; color:#00e0ff; margin:0 10px;">S 0.00, E 0.00</span>
+                        <button class="expand-btn">⤢</button>
+                    </div>
+                </div>
+
+                <div class="maps-wrapper">
+                    <div id="gmaps-container" class="map-box">
+                        <div class="compass-indicator"><div class="arrow-north"></div><span class="compass-n">N</span></div>
+                    </div>
+                    <div id="arena-container" class="map-box" style="background:white !important;">
+                        <canvas id="arena-canvas"></canvas>
+                        <div class="compass-indicator"><div class="arrow-north"></div><span class="compass-n">N</span></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <aside class="col-right card">
+            <div class="card-header">
+                <span>MONITORING</span>
+                <button class="expand-btn">⤢</button>
+            </div>
+
+            <div class="card-content-stack">
+                <div class="sensor-section" data-card="monitor">
+                    <div class="sensor-grid">
+                        <div class="sensor-item" data-sensor="roll"><span class="label">Roll</span><div class="gauge-circle"><span class="range-min">0</span><span class="range-max">360</span><div class="needle" id="needle-roll"></div><span class="val-text" id="roll-value">0°</span></div></div>
+                        <div class="sensor-item" data-sensor="pitch"><span class="label">Pitch</span><div class="gauge-circle"><span class="range-min">0</span><span class="range-max">360</span><div class="needle" id="needle-pitch"></div><span class="val-text" id="pitch-value">0°</span></div></div>
+                        <div class="sensor-item" data-sensor="yaw"><span class="label">Yaw</span><div class="gauge-circle"><span class="range-min">0</span><span class="range-max">360</span><div class="needle" id="needle-yaw"></div><span class="val-text" id="yaw-value">0°</span></div></div>
+                        <div class="sensor-item active" data-sensor="speed"><span class="label">SOG</span><div class="gauge-semi"><span class="semi-label-left">0</span><span class="semi-label-mid">40</span><span class="semi-label-right">80</span><div class="needle" id="needle-speed"></div></div><span class="val-text" id="speed-value">0</span></div>
+                        <div class="sensor-item" data-sensor="nuc_signal"><span class="label">COG</span><div class="gauge-circle"><span class="range-cardinal top">N</span><span class="range-cardinal right">E</span><span class="range-cardinal bottom">S</span><span class="range-cardinal left">W</span><div class="needle" id="needle-cog"></div><span class="val-text" id="signal-value">0°</span></div></div>
+                        <div class="sensor-item" data-sensor="heading"><span class="label">Heading</span><div class="gauge-circle"><span class="range-cardinal top">N</span><span class="range-cardinal right">E</span><span class="range-cardinal bottom">S</span><span class="range-cardinal left">W</span><div class="needle" id="needle-heading"></div><span class="val-text" id="heading-value">0°</span></div></div>
+                        <div class="sensor-item" data-sensor="voltage"><span class="label">Volt</span><div class="battery-container"><div class="battery-cap"></div><div class="battery-body"><div class="battery-fill" id="battery-fill"></div></div></div><span class="val-text" id="voltage-value">0V</span></div>
+                        <div class="sensor-item" data-sensor="wifi"><span class="label">Sig</span><div class="wifi-container"><div class="wifi-bar b1"></div><div class="wifi-bar b2"></div><div class="wifi-bar b3"></div></div><span class="val-text" id="wifi-value">0ms</span></div>
+                    </div>
+                </div>
+                <div class="chart-section">
+                    <canvas id="sensorChart"></canvas>
+                </div>
+            </div>
+        </aside>
+
     </div>
-
     <div id="login-modal" class="modal">
-      <div class="login-box">
-        <h3>ADMIN LOGIN</h3>
-        <div class="input-group">
-          <input
-            type="text"
-            id="username"
-            placeholder="Username"
-            autocomplete="off"
-          />
-        </div>
-        <div class="input-group">
-          <input type="password" id="password" placeholder="Password" />
-        </div>
+        <div class="login-box">
+            <h3>ADMIN LOGIN</h3>
+            
+            <div class="input-group">
+                <input type="text" id="username" placeholder="Username" autocomplete="off">
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Password">
+            </div>
 
-        <div class="login-buttons">
-          <button id="login-submit" class="login-btn btn-admin-login">
-            LOGIN
-          </button>
-          <button id="login-cancel" class="login-btn btn-admin-cancel">
-            BATAL
-          </button>
+            <div class="login-buttons">
+                <button id="login-submit" class="login-btn btn-admin-login">LOGIN</button>
+                <button id="login-cancel" class="login-btn btn-admin-cancel">BATAL</button>
+            </div>
         </div>
-      </div>
     </div>
 
     <script src="js/main.js"></script>
-  </body>
+</body>
 </html>
